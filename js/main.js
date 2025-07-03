@@ -1,4 +1,43 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Obtener productos del backend y mostrarlos en consola
+    fetch('http://localhost:5000/api/products')
+        .then(response => response.json())
+        .then(data => {
+            // Renderizar productos en el HTML
+            if (productsContainer) {
+                productsContainer.innerHTML = data.map(product => `
+                    <div class="card-product" data-id="${product._id}">
+                        <div class="container-img">
+                            <img src="${product.image || 'img/cafe-irish.jpg'}" alt="${product.name}">
+                            <span class="discount">${product.discount || ''}</span>
+                            <div class="button-group">
+                                <span><i class="fa-regular fa-eye"></i></span>
+                                <span><i class="fa-regular fa-heart"></i></span>
+                                <span><i class="fa-solid fa-code-compare"></i></span>
+                            </div>
+                        </div>
+                        <div class="content-card-product">
+                            <div class="stars">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                            </div>
+                            <h3>${product.name}</h3>
+                            <button class="add-cart" aria-label="Agregar al carrito">
+                                <i class="fa-solid fa-basket-shopping"></i>
+                            </button>
+                            <p class="price">$${product.price.toFixed(2)}</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        })
+        .catch(error => {
+            console.error('Error al obtener productos:', error);
+        });
+    
     // Variables globales
     let cart = [];
     const cartIcon = document.querySelector('.fa-basket-shopping');
